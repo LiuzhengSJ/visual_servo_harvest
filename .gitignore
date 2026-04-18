@@ -1,0 +1,34 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+# Build files (catkin/CMake)
+build/
+devel/
+.catkin_tools/
+*.catkin
+
+# Binary files
+*.whl
+*.a
+*.o
+*.bin
+
+# Test files
+test/__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak

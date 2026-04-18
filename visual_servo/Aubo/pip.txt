@@ -1,0 +1,8 @@
+python -m pip install pillow==11.2.1 -i https://mirrors.aliyun.com/pypi/simple/
+python -m pip install opencv-python==4.10.0.84 -i https://mirrors.aliyun.com/pypi/simple/
+python -m pip install pyrealsense2==2.55.1.6486 -i https://mirrors.aliyun.com/pypi/simple/
+python -m pip install pyaubo_agvc_sdk==0.2.0 -i https://mirrors.aliyun.com/pypi/simple/
+python -m pip install pyaubo_sdk==0.24.1 -i https://mirrors.aliyun.com/pypi/simple/
+python -m pip install ultralytics==8.3.112 -i https://mirrors.aliyun.com/pypi/simple/
+
+适配numpy2.0
