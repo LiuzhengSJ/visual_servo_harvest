@@ -64,6 +64,18 @@ def converted_distant_2d_3d_demostration(camera_close_list, xyz_distant_image, i
     return locations_3d
 
 def converted_distant_2d_3d(camera_close_list, xyz_distant_image, image_shape):
+    '''
+    input:
+    camera_close_list:  list of prediction boxes, each values contains ： xmin, ymin, xmax, ymax, class
+    xyz_distant_image:  point cloud data, xyz, unit: m
+    image_shape:        image shape, 1280X720X3？
+
+    return:
+    close observation location: x:  the median value of all validated values.
+                                y:  the top (first) element value along image y axis.
+                                z:   the median value of all validated values - 0.25 m
+                                class:  the tomato class, 0,1,2,3
+    '''
     locations_3d = []
     # 获取pcd中xyz数据
     xyz_close_point = np.asarray(xyz_distant_image).reshape(image_shape[0], image_shape[1], 3)
@@ -124,6 +136,15 @@ def converted_distant_2d_3d(camera_close_list, xyz_distant_image, image_shape):
 
 
 def converted_keypoint_2d_3d(pose_results, xyz_close_image, image_shape):
+    '''
+    input:
+    pose_results:       list of dicts indicating key points 'x', 'y' pixel position, and 'conf'
+    xyz_close_image:    point cloud
+    image_shape:
+    output:
+    keypoints_3d:       locations of key points, x, y, z in camera frame, unit: m
+    keypoints_label:    1 for valid, 0 or invalid
+    '''
     keypoints_3d = []
     keypoints_label = []
     # 获取pcd中xyz数据

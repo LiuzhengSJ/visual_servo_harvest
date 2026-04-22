@@ -46,12 +46,12 @@ def convert_pose_to_matrix(pose,type="euler"):
     return homogeneous_matrix,rotation       
 def target_pose_to_base(target_pose,cam_rotation,endstate):
     '''
-    target_pose:    target position in camera frame, m
-    cam_rotation:   ?? intrisics
-    endstate:       pose of end-effector
+    target_pose:    target position in distant camera frame, m
+    cam_rotation:   the specific orientation to closely observe the tomatoes. Constant according to the specific tomato type. in distant camera frame
+    endstate:       pose of end-effector, in robot base frame
     Return
-    base_object_pose    target position in base frame
-    euler_cam_base      camera euler pose in base frame
+    base_object_pose    close camera position in base frame
+    euler_cam_base      close camera euler pose in base frame
     '''
     #相机标定
     #法奥为毫米制，欧拉角为角度制！！！
@@ -110,7 +110,7 @@ def target_pose_to_base(target_pose,cam_rotation,endstate):
 def pick_cam_ori(keypoints_list,keypoints_index,tomato_classify):
     '''
     keypoints_list:    list of keypoints 3D positions
-    keypoints_index:    list of keypoints confidence, list of float
+    keypoints_index:    list of keypoints validation status, 1 or 0
     '''
  
     # ----------------------model-------------------------
@@ -150,9 +150,7 @@ def pick_cam_ori(keypoints_list,keypoints_index,tomato_classify):
             tendency = "1"  # 果梗左倾
 
         stem_vector = stem_keypoints[1] - stem_keypoints[0]  # [3,]
-        # stalk_vector = stalk_keypoints[0] - stem_keypoints[0]
 
-        # stalk_vector = stalk_keypoints[1] - stalk_keypoints[0]
         stalk_vector = stalk_keypoints[-1] - stalk_keypoints[0]
         if len(fruit_keypoints)>=1:
             # fruit_vector = fruit_keypoints[0] - stem_keypoints[-1]
@@ -163,14 +161,11 @@ def pick_cam_ori(keypoints_list,keypoints_index,tomato_classify):
             z = np.cross(stem_vector, stalk_vector)
 
             x = np.cross(fruit_vector, z)# 以茎和果梗平面的法向量为 工具坐标z轴方向 垂直向下里
-            # y = np.cross(z, stem_vector)  # 以茎和果梗平面的法向量为 工具坐标z轴方向 垂直向下里
         else:
             z = -np.cross(stem_vector, stalk_vector)
             x = np.cross(fruit_vector, z)
-            # y = -np.cross(z, stem_vector)
-            # 以Z轴和主茎平面的法向量为 工具坐标Y轴方向 指向
+        # 以Z轴和主茎平面的法向量为 工具坐标Y轴方向 指向
         y = np.cross(z, x)  # 以y轴和z轴为 工具坐标Y轴方向 指向右侧
-        # x = np.cross(y, z)  # 以y轴和z轴为 工具坐标Y轴方向 指向右侧
         # 旋转矩阵
         Rota_T.append(x/np.linalg.norm(x))
         Rota_T.append(y/np.linalg.norm(y))
@@ -182,7 +177,8 @@ def pick_cam_ori(keypoints_list,keypoints_index,tomato_classify):
         rx = rota_angle[0]
         ry = rota_angle[1]
         rz = rota_angle[2]
-    
+
+#   limit the range of rotations to a small values, HOW TO INTERPRET?
         if tomato_classify == 1.0:
             # 在x轴上，即俯仰角度 
             # 近景观测时俯视10度 -10 0.174533
